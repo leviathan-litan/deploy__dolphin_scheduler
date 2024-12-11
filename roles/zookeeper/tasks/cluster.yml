@@ -1,0 +1,59 @@
+- name: "Arch: Cluster"
+  debug:
+    msg: "Your current choice is [ZOOKEEPER Cluster]"
+
+- name: "create linux user {{ zookeeper__linux_user }}"
+  user:
+    name: "{{ zookeeper__linux_user }}"
+    password: "{{ zookeeper__linux_password | password_hash('sha512', 'salt') }}"
+    shell: "/bin/bash"
+
+- name: "create directory"
+  file:
+    state: directory
+    owner: "{{ zookeeper__linux_user }}"
+    group: "{{ zookeeper__linux_user }}"
+    mode: 0755
+    path: "{{ item }}"
+  with_items:
+    - "{{ zookeeper__dir_home }}"
+    - "{{ zookeeper__dir_data }}"
+
+- name: "upload and uncompress ZOOKEEPER install media"
+  unarchive:
+    owner: "{{ zookeeper__linux_user }}"
+    group: "{{ zookeeper__linux_user }}"
+    mode: 0755
+    src: "{{ zookeeper__install_media }}"
+    dest: "{{ zookeeper__dir_base }}"
+
+- name: "create ZOOKEEPER config file"
+  template:
+    owner: "{{ zookeeper__linux_user }}"
+    group: "{{ zookeeper__linux_user }}"
+    mode: 0644
+    src: "zoo.cfg.cluster.j2"
+    dest: "{{ zookeeper__dir_home }}/conf/zoo.cfg"
+
+- name: "create ZOOKEEPER myid file"
+  template:
+    owner: "{{ zookeeper__linux_user }}"
+    group: "{{ zookeeper__linux_user }}"
+    mode: 0644
+    src: "myid.j2"
+    dest: "{{ zookeeper__dir_data }}/myid"
+
+- name: "create ZOOKEEPER Linux Service"
+  template:
+    owner: "root"
+    group: "root"
+    mode: 0644
+    src: "zookeeper.service.j2"
+    dest: "/usr/lib/systemd/system/zookeeper.service"
+
+- name: "Start ZooKeeper"
+  systemd:
+    name: zookeeper
+    state: started
+    daemon_reload: true
+    enabled: true

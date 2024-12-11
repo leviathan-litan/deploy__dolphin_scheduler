@@ -1,0 +1,3 @@
+- name: "Arch: Standalone"
+  debug:
+    msg: "Your current choice is [ZOOKEEPER Standalone]"

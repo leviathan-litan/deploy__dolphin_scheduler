@@ -1,0 +1,19 @@
+[Unit]
+Description=ZooKeeper is a centralized service for maintaining configuration information, naming, providing distributed synchronization, and providing group services.
+Documentation=https://zookeeper.apache.org/
+Requires=network.target
+After=network.target
+
+[Service]
+Type=forking
+Environment=JAVA_HOME={{ java__dir_home }}
+User=zookeeper
+Group=zookeeper
+ExecStart={{ zookeeper__dir_home }}/bin/zkServer.sh start {{ zookeeper__dir_home }}/conf/zoo.cfg
+ExecStop={{ zookeeper__dir_home }}/bin/zkServer.sh stop {{ zookeeper__dir_home }}/conf/zoo.cfg
+ExecReload={{ zookeeper__dir_home }}/bin/zkServer.sh restart {{ zookeeper__dir_home }}/conf/zoo.cfg
+TimeoutSec=30
+Restart=on-failure
+
+[Install]
+WantedBy=default.target

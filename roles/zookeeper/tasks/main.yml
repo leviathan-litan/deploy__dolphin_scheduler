@@ -1,0 +1,11 @@
+- name: "Deploy ZOOKEEPER / standalone"
+  include_tasks:
+    file: standalone.yml
+  when:
+    - zookeeper__deploy_arch == "standalone"
+
+- name: "Deploy ZOOKEEPER / cluster"
+  include_tasks:
+    file: cluster.yml
+  when:
+    - zookeeper__deploy_arch == "cluster"

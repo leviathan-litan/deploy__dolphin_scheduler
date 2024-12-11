@@ -1,0 +1,59 @@
+- name: "Linux Config"
+  hosts:
+    - dolphin_scheduler
+  roles:
+    - linux
+  vars_files:
+    - vars/dolphin_scheduler__deploy.yml
+  gather_facts: yes
+  become: yes
+  become_user: root
+  become_method: sudo
+
+- name: "Deploy Python"
+  hosts:
+    - dolphin_scheduler
+  roles:
+    - python
+  vars_files:
+    - vars/dolphin_scheduler__deploy.yml
+  gather_facts: yes
+  become: yes
+  become_user: root
+  become_method: sudo
+
+- name: "Deploy Java"
+  hosts:
+    - zookeeper
+    - ds_master
+    - ds_worker
+    - ds_alert_server
+    - ds_api_server
+  roles:
+    - java
+  vars_files:
+    - vars/dolphin_scheduler__deploy.yml
+  gather_facts: yes
+  become: yes
+  become_user: root
+  become_method: sudo
+
+- name: "Deploy MySQL"
+  hosts:
+    - mysql
+  roles:
+    - mysql
+  vars_files:
+    - vars/dolphin_scheduler__deploy.yml
+
+- name: "Deploy Zookeeper"
+  hosts:
+    - zookeeper
+  roles:
+    - zookeeper
+  vars_files:
+    - vars/dolphin_scheduler__deploy.yml
+  gather_facts: yes
+  become: yes
+  become_user: root
+  become_method: sudo

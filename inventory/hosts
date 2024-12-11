@@ -1,0 +1,31 @@
+[mysql]
+mysql ansible_host=192.168.5.104 ansible_port=22 ansible_user="admin" ansible_ssh_pass="oracle" ansible_become_password="oracle"
+
+[zookeeper]
+zookeeper01 zoo_myid=1 ansible_host=192.168.5.104 ansible_port=22 ansible_user="admin" ansible_ssh_pass="oracle" ansible_become_password="oracle"
+zookeeper02 zoo_myid=2 ansible_host=192.168.5.105 ansible_port=22 ansible_user="admin" ansible_ssh_pass="oracle" ansible_become_password="oracle"
+zookeeper03 zoo_myid=3 ansible_host=192.168.5.106 ansible_port=22 ansible_user="admin" ansible_ssh_pass="oracle" ansible_become_password="oracle"
+
+[ds_master]
+master01 ansible_host=192.168.5.104 ansible_port=22 ansible_user="admin" ansible_ssh_pass="oracle" ansible_become_password="oracle"
+master02 ansible_host=192.168.5.105 ansible_port=22 ansible_user="admin" ansible_ssh_pass="oracle" ansible_become_password="oracle"
+master03 ansible_host=192.168.5.106 ansible_port=22 ansible_user="admin" ansible_ssh_pass="oracle" ansible_become_password="oracle"
+
+[ds_worker]
+worker01 ansible_host=192.168.5.104 ansible_port=22 ansible_user="admin" ansible_ssh_pass="oracle" ansible_become_password="oracle"
+worker02 ansible_host=192.168.5.105 ansible_port=22 ansible_user="admin" ansible_ssh_pass="oracle" ansible_become_password="oracle"
+worker03 ansible_host=192.168.5.106 ansible_port=22 ansible_user="admin" ansible_ssh_pass="oracle" ansible_become_password="oracle"
+
+[ds_alert_server]
+alert_server ansible_host=192.168.5.104 ansible_port=22 ansible_user="admin" ansible_ssh_pass="oracle" ansible_become_password="oracle"
+
+[ds_api_server]
+api_server ansible_host=192.168.5.104 ansible_port=22 ansible_user="admin" ansible_ssh_pass="oracle" ansible_become_password="oracle"
+
+[dolphin_scheduler:children]
+mysql
+zookeeper
+ds_master
+ds_worker
+ds_alert_server
+ds_api_server
