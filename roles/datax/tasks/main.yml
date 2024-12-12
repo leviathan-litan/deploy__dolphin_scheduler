@@ -1,0 +1,24 @@
+- name: "【DataX】创建目录"
+  file:
+    state: directory
+    owner: "{{ dolphin_scheduler__linux_user }}"
+    group: "{{ dolphin_scheduler__linux_user }}"
+    mode: 0755
+    path: "{{ item }}"
+  with_items:
+    - "{{ datax__dir_base }}"
+    - "{{ datax__dir_home }}"
+    - "{{ unzip__dir_upload }}"
+    - "{{ unzip__install_media_upload }}"
+
+# - name: "安装【unzip】"
+#   include_tasks:
+#     file: unzip_install.yml
+
+- name: "【DataX】解压缩"
+  unarchive:
+    owner: "{{ dolphin_scheduler__linux_user }}"
+    group: "{{ dolphin_scheduler__linux_user }}"
+    mode: 0755
+    src: "{{ datax__install_media }}"
+    dest: "{{ datax__dir_base }}"

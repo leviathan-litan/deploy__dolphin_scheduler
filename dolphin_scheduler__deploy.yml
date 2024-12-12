@@ -72,3 +72,15 @@
   become: yes
   become_user: root
   become_method: sudo
+
+- name: "Deploy DataX"
+  hosts:
+    - ds_worker
+  roles:
+    - datax
+  vars_files:
+    - vars/dolphin_scheduler__deploy.yml
+  gather_facts: yes
+  become: yes
+  become_user: root
+  become_method: sudo

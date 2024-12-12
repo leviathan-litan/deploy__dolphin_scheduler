@@ -1,0 +1,24 @@
+- name: "[unzip] unarchive"
+  unarchive:
+    owner: root
+    group: root
+    mode: 0755
+    src: "{{ unzip__install_media }}"
+    dest: "{{ unzip__install_media_upload }}"
+
+- name: "[unzip] find rpms"
+  find:
+    paths: "{{ unzip__install_media_upload }}"
+    patterns: "*.rpm"
+  register: rpm_files
+
+- name: "[unzip] set fact rpm_list"
+  set_fact:
+    rpm_list: "{{ rpm_files.files | map(attribute='path') | list }}"
+
+- name: "[unzip] install"
+  shell: |
+    rpm -ivh {{ item }}
+  with_items:
+    - "{{ rpm_list }}"
+  ignore_errors: yes
