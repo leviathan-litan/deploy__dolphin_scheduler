@@ -31,7 +31,7 @@
 
 - name: "【用户：dolphinscheduler】set fact: ds_inventory_hostname_list"
   set_fact:
-    ds_inventory_hostname_list: "{{ groups['ds_master'] + groups['ds_worker'] + groups['ds_api_server'] + groups['ds_alert_server'] }}"
+    ds_inventory_hostname_list: "{{ hostvars | dict2items | map(attribute='value.ansible_host') | list | unique }}"
 
 - name: "【用户：dolphinscheduler】[Linux SSH Connectivity] Public key / ssh-copy-id"
   expect:
