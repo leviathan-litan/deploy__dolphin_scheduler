@@ -1,0 +1,11 @@
+- name: "dolphin scheduler mysql init.sh"
+  template:
+    owner: "{{ dolphin_scheduler__linux_user }}"
+    group: "{{ dolphin_scheduler__linux_user }}"
+    mode: 0755
+    src: "dolphinscheduler-mysql-init.sh.j2"
+    dest: "{{ dolphin_scheduler__install_media_upload }}/dolphinscheduler-mysql-init.sh"
+
+- name: "dolphin scheduler mysql init.sh / execute"
+  shell: |
+    sh -x {{ dolphin_scheduler__install_media_upload }}/dolphinscheduler-mysql-init.sh &> {{ dolphin_scheduler__install_media_upload }}/dolphinscheduler-mysql-init.log

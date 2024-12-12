@@ -1,0 +1,65 @@
+
+- name: "解压 海豚安装介质"
+  unarchive:
+    owner: "{{ dolphin_scheduler__linux_user }}"
+    group: "{{ dolphin_scheduler__linux_user }}"
+    mode: 0755
+    src: "{{ dolphin_scheduler__install_media }}"
+    dest: "{{ dolphin_scheduler__dir_upload }}"
+
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 拷贝 jar文件：mysql-connector-java-8.0.16.jar / ojdbc8-12.2.0.1.jar
+
+- name: "拷贝 jar文件 到 master-server/libs"
+  copy:
+    owner: "{{ dolphin_scheduler__linux_user }}"
+    group: "{{ dolphin_scheduler__linux_user }}"
+    mode: 0744
+    src: "{{ item }}"
+    dest: "{{ dolphin_scheduler__install_media_upload }}/master-server/libs/"
+  with_items:
+    - "{{ mysql_connector__jar_install_media }}"
+    - "{{ ojdbc__jar_install_media }}"
+
+- name: "拷贝 jar文件 到 worker-server/libs"
+  copy:
+    owner: "{{ dolphin_scheduler__linux_user }}"
+    group: "{{ dolphin_scheduler__linux_user }}"
+    mode: 0744
+    src: "{{ item }}"
+    dest: "{{ dolphin_scheduler__install_media_upload }}/worker-server/libs/"
+  with_items:
+    - "{{ mysql_connector__jar_install_media }}"
+    - "{{ ojdbc__jar_install_media }}"
+
+- name: "拷贝 jar文件 到 api-server/libs"
+  copy:
+    owner: "{{ dolphin_scheduler__linux_user }}"
+    group: "{{ dolphin_scheduler__linux_user }}"
+    mode: 0744
+    src: "{{ item }}"
+    dest: "{{ dolphin_scheduler__install_media_upload }}/api-server/libs/"
+  with_items:
+    - "{{ mysql_connector__jar_install_media }}"
+    - "{{ ojdbc__jar_install_media }}"
+
+- name: "拷贝 jar文件 到 alert-server/libs"
+  copy:
+    owner: "{{ dolphin_scheduler__linux_user }}"
+    group: "{{ dolphin_scheduler__linux_user }}"
+    mode: 0744
+    src: "{{ item }}"
+    dest: "{{ dolphin_scheduler__install_media_upload }}/alert-server/libs/"
+  with_items:
+    - "{{ mysql_connector__jar_install_media }}"
+    - "{{ ojdbc__jar_install_media }}"
+
+- name: "拷贝 jar文件 到 tools/libs"
+  copy:
+    owner: "{{ dolphin_scheduler__linux_user }}"
+    group: "{{ dolphin_scheduler__linux_user }}"
+    mode: 0744
+    src: "{{ item }}"
+    dest: "{{ dolphin_scheduler__install_media_upload }}/tools/libs/"
+  with_items:
+    - "{{ mysql_connector__jar_install_media }}"
+    - "{{ ojdbc__jar_install_media }}"

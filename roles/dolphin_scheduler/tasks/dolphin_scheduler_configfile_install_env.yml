@@ -1,0 +1,73 @@
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 安装目录
+
+- name: "文件【bin/env/install_env.sh】修改：安装目录 installPath"
+  lineinfile:
+    backup: yes
+    path: "{{ dolphin_scheduler__install_media_upload }}/bin/env/install_env.sh"
+    regexp: '^installPath='
+    line: installPath="{{ dolphin_scheduler__dir_home }}"
+
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ips
+
+- name: "set fact: ds_inventory_hostname_list"
+  set_fact:
+    ds_inventory_hostname_list: "{{ hostvars | dict2items | map(attribute='value.ansible_host') | list | unique }}"
+
+- name: "文件【bin/env/install_env.sh】修改：ips"
+  lineinfile:
+    backup: yes
+    path: "{{ dolphin_scheduler__install_media_upload }}/bin/env/install_env.sh"
+    regexp: '^ips='
+    line: ips="{{ ds_inventory_hostname_list | join(',') }}"
+
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% master
+
+- name: "set fact: ds_master_inventory_hostname_list"
+  set_fact:
+    ds_master_inventory_hostname_list: "{{ groups['ds_master'] | map('extract', hostvars, 'ansible_host') | list | unique }}"
+
+- name: "文件【bin/env/install_env.sh】修改：masters"
+  lineinfile:
+    backup: yes
+    path: "{{ dolphin_scheduler__install_media_upload }}/bin/env/install_env.sh"
+    regexp: '^masters='
+    line: masters="{{ ds_master_inventory_hostname_list | join(',') }}"
+
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% worker
+
+- name: "set fact: ds_worker_inventory_hostname_list"
+  set_fact:
+    ds_worker_inventory_hostname_list: "{{ groups['ds_worker'] | map('extract', hostvars, 'ansible_host') | list | unique }}"
+
+- name: "文件【bin/env/install_env.sh】修改：workers"
+  lineinfile:
+    backup: yes
+    path: "{{ dolphin_scheduler__install_media_upload }}/bin/env/install_env.sh"
+    regexp: '^workers='
+    line: workers="{{ ds_worker_inventory_hostname_list | join(':default,') }}:default"
+
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% alert server
+
+- name: "set fact: ds_alertserver_inventory_hostname_list"
+  set_fact:
+    ds_alertserver_inventory_hostname_list: "{{ groups['ds_alert_server'] | map('extract', hostvars, 'ansible_host') | list | unique }}"
+
+- name: "文件【bin/env/install_env.sh】修改：alertServer"
+  lineinfile:
+    backup: yes
+    path: "{{ dolphin_scheduler__install_media_upload }}/bin/env/install_env.sh"
+    regexp: '^alertServer='
+    line: alertServer="{{ ds_alertserver_inventory_hostname_list | join(',') }}"
+
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% api server
+
+- name: "set fact: ds_apiserver_inventory_hostname_list"
+  set_fact:
+    ds_apiserver_inventory_hostname_list: "{{ groups['ds_api_server'] | map('extract', hostvars, 'ansible_host') | list | unique }}"
+
+- name: "文件【bin/env/install_env.sh】修改：apiServers"
+  lineinfile:
+    backup: yes
+    path: "{{ dolphin_scheduler__install_media_upload }}/bin/env/install_env.sh"
+    regexp: '^apiServers='
+    line: apiServers="{{ ds_apiserver_inventory_hostname_list | join(',') }}"

@@ -1,0 +1,60 @@
+- name: "[Linux SSH Connectivity] Current Time"
+  shell: |
+    date +%Y-%m%d_%H:%M:%S
+  register: current_timedate
+
+
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 用户 dolphinscheduler
+
+- name: "【用户：dolphinscheduler】id_rsa / 是否存在 / 检查"
+  stat:
+    path: '/home/dolphinscheduler/.ssh/id_rsa'
+  register: id_rsa_stat
+
+- name: "【用户：dolphinscheduler】id_rsa / 备份"
+  shell: |
+    mv /home/dolphinscheduler/.ssh/id_rsa /home/dolphinscheduler/.ssh/id_rsa_{{ current_timedate.stdout }}
+  when: 
+    - id_rsa_stat.stat.exists
+  ignore_errors: yes
+
+- name: "【用户：dolphinscheduler】[Linux SSH Connectivity] Private key / Gen"
+  expect:
+    command: |
+      ssh-keygen -t rsa
+    responses:
+      Enter(.*) : "\r"
+      Overwrite (y/n)? : "y"
+  become: yes
+  become_user: "{{ dolphin_scheduler__linux_user }}"
+  ignore_errors: yes
+
+- name: "【用户：dolphinscheduler】set fact: ds_inventory_hostname_list"
+  set_fact:
+    ds_inventory_hostname_list: "{{ groups['ds_master'] + groups['ds_worker'] + groups['ds_api_server'] + groups['ds_alert_server'] }}"
+
+- name: "【用户：dolphinscheduler】[Linux SSH Connectivity] Public key / ssh-copy-id"
+  expect:
+    command: |
+      ssh-copy-id -i /home/{{ dolphin_scheduler__linux_user }}/.ssh/id_rsa.pub {{ dolphin_scheduler__linux_user }}@{{ item }}
+    responses:
+      (.*)password : "{{ dolphin_scheduler__linux_password }}"
+      Are you sure you want to continue connecting (yes/no)? : "yes"
+  with_items:
+    - "{{ ds_inventory_hostname_list }}"
+  become: yes
+  become_user: "{{ dolphin_scheduler__linux_user }}"
+  ignore_errors: yes
+
+- name: "【用户：dolphinscheduler】[Linux SSH Connectivity] Check"
+  expect:
+    command: |
+      ssh {{ item }} hostname
+    responses:
+      Are you sure you want to continue connecting (yes/no/[fingerprint])? : "yes"
+      Are you sure you want to continue connecting (yes/no)? : "yes"
+  with_items:
+    - "{{ ds_inventory_hostname_list }}"
+  become: yes
+  become_user: "{{ dolphin_scheduler__linux_user }}"
+  ignore_errors: yes

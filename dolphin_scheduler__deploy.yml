@@ -57,3 +57,18 @@
   become: yes
   become_user: root
   become_method: sudo
+
+- name: "Deploy Dolphin Scheduler"
+  hosts:
+    - ds_master
+    - ds_worker
+    - ds_api_server
+    - ds_alert_server
+  roles:
+    - dolphin_scheduler
+  vars_files:
+    - vars/dolphin_scheduler__deploy.yml
+  gather_facts: yes
+  become: yes
+  become_user: root
+  become_method: sudo

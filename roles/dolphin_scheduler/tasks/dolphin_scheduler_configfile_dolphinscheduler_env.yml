@@ -1,0 +1,90 @@
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 配置文件
+
+- name: "set fact: ds_zookeeper_inventory_hostname_list"
+  set_fact:
+    ds_zookeeper_inventory_hostname_list: "{{ groups['zookeeper'] | map('extract', hostvars, 'ansible_host') | list | unique }}"
+
+- name: "文件【dolphinscheduler_env.sh】修改配置：JAVA_HOME"
+  lineinfile:
+    backup: yes
+    path: "{{ dolphin_scheduler__install_media_upload }}/bin/env/dolphinscheduler_env.sh"
+    regexp: '^export\sJAVA_HOME'
+    # line: export JAVA_HOME=${JAVA_HOME:-{{ java__dir_home }}}
+    line: export JAVA_HOME={{ java__dir_home }}
+
+- name: "文件【dolphinscheduler_env.sh】修改配置：PYTHON"
+  lineinfile:
+    backup: yes
+    path: "{{ dolphin_scheduler__install_media_upload }}/bin/env/dolphinscheduler_env.sh"
+    regexp: '^export\sPYTHON_HOME'
+    # line: 'export PYTHON_HOME=${PYTHON_HOME:-/usr/bin/python}'
+    line: 'export PYTHON_HOME=/usr/bin/python'    
+
+- name: "文件【dolphinscheduler_env.sh】修改配置：DATAX"
+  lineinfile:
+    backup: yes
+    path: "{{ dolphin_scheduler__install_media_upload }}/bin/env/dolphinscheduler_env.sh"
+    regexp: '^export\sDATAX_HOME'
+    # line: 'export DATAX_HOME=${DATAX_HOME:-{{ datax__dir_home }}}'
+    line: 'export DATAX_HOME={{ datax__dir_home }}'
+  
+- name: "文件【dolphinscheduler_env.sh】修改配置：ZOOKEEPER"
+  lineinfile:
+    backup: yes
+    path: "{{ dolphin_scheduler__install_media_upload }}/bin/env/dolphinscheduler_env.sh"
+    regexp: '^export\sREGISTRY_ZOOKEEPER_CONNECT_STRING'
+    line: export REGISTRY_ZOOKEEPER_CONNECT_STRING=${REGISTRY_ZOOKEEPER_CONNECT_STRING:-{{ ds_zookeeper_inventory_hostname_list | join(':2181,') }}:2181}
+
+- name: "文件【dolphinscheduler_env.sh】修改配置：时区"
+  lineinfile:
+    backup: yes
+    path: "{{ dolphin_scheduler__install_media_upload }}/bin/env/dolphinscheduler_env.sh"
+    regexp: '^export\sSPRING_JACKSON_TIME_ZONE'
+    line: export SPRING_JACKSON_TIME_ZONE=${SPRING_JACKSON_TIME_ZONE:-{{ dolphin_scheduler__time_zone }}}
+
+- name: "文件【dolphinscheduler_env.sh】修改配置：数据库 / 类型"
+  lineinfile:
+    backup: yes
+    path: "{{ dolphin_scheduler__install_media_upload }}/bin/env/dolphinscheduler_env.sh"
+    regexp: '^export\sDATABASE'
+    line: export DATABASE=mysql
+
+- name: "文件【dolphinscheduler_env.sh】修改配置：数据库 / 连接字符串"
+  lineinfile:
+    backup: yes
+    path: "{{ dolphin_scheduler__install_media_upload }}/bin/env/dolphinscheduler_env.sh"
+    regexp: '^export\sSPRING_DATASOURCE_URL'
+    # line: export SPRING_DATASOURCE_URL="jdbc:mysql://{{ hostvars['mysql']['ansible_host'] }}:{{ dolphin_scheduler__db_port }}/{{ dolphin_scheduler__db_name }}?useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true"
+    line: export SPRING_DATASOURCE_URL="jdbc:mysql://{{ hostvars['mysql']['ansible_host'] }}:{{ dolphin_scheduler__db_port }}/{{ dolphin_scheduler__db_name }}?useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone={{ linux__timezone }}"
+
+- name: "文件【dolphinscheduler_env.sh】修改配置：数据库 / 用户"
+  lineinfile:
+    backup: yes
+    path: "{{ dolphin_scheduler__install_media_upload }}/bin/env/dolphinscheduler_env.sh"
+    regexp: '^export\sSPRING_DATASOURCE_USERNAME'
+    line: export SPRING_DATASOURCE_USERNAME={{ dolphin_scheduler__db_user }}
+
+- name: "文件【dolphinscheduler_env.sh】修改配置：数据库 / 密码"
+  lineinfile:
+    backup: yes
+    path: "{{ dolphin_scheduler__install_media_upload }}/bin/env/dolphinscheduler_env.sh"
+    regexp: '^export\sSPRING_DATASOURCE_PASSWORD'
+    line: export SPRING_DATASOURCE_PASSWORD={{ dolphin_scheduler__db_password }}
+
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 同步文件
+
+- name: "复制文件【dolphinscheduler_env.sh】到目录：master-server/conf"
+  shell: |
+    cp -rf {{ dolphin_scheduler__install_media_upload }}/bin/env/dolphinscheduler_env.sh {{ dolphin_scheduler__install_media_upload }}/master-server/conf/dolphinscheduler_env.sh
+
+- name: "复制文件【dolphinscheduler_env.sh】到目录：worker-server/conf"
+  shell: |
+    cp -rf {{ dolphin_scheduler__install_media_upload }}/bin/env/dolphinscheduler_env.sh {{ dolphin_scheduler__install_media_upload }}/worker-server/conf/dolphinscheduler_env.sh
+
+- name: "复制文件【dolphinscheduler_env.sh】到目录：alert-server/conf"
+  shell: |
+    cp -rf {{ dolphin_scheduler__install_media_upload }}/bin/env/dolphinscheduler_env.sh {{ dolphin_scheduler__install_media_upload }}/alert-server/conf/dolphinscheduler_env.sh
+
+- name: "复制文件【dolphinscheduler_env.sh】到目录：api-server/conf"
+  shell: |
+    cp -rf {{ dolphin_scheduler__install_media_upload }}/bin/env/dolphinscheduler_env.sh {{ dolphin_scheduler__install_media_upload }}/api-server/conf/dolphinscheduler_env.sh

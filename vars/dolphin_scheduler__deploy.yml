@@ -1,3 +1,6 @@
+# 注意：
+# 1. 操作系统时区 / 数据库时区 / Dolphin Scheduler 时区，三个时区 最好保持一致
+
 # %%%%%%%%%%%%%%%%%%%% ROLE: LINUX
 
 # --- 开关
@@ -7,6 +10,7 @@ linux__enable_time_ntp: yes
 
 # --- 参数
 
+# 操作系统时区
 linux__timezone: "Asia/Shanghai"
 linux__time_ntp_servers:
   - ntp.aliyun.com
@@ -40,6 +44,7 @@ mysql__enabled_create_db_user: yes
 # Standalone
 mysql__deploy_arch: standalone
 
+# 数据库时区
 mysql__default_timezone: "+08:00"
 
 mysql__db_root_password: "Root@123"
@@ -67,3 +72,61 @@ zookeeper__install_media: "{{ dir__ansible_server__files }}/zookeeper/apache-zoo
 zookeeper__dir_base: "/opt"
 zookeeper__dir_home: "/opt/apache-zookeeper-3.8.3-bin"
 zookeeper__dir_data: "/data/zookeeper"
+
+# %%%%%%%%%%%%%%%%%%%% ROLE: DOLPHIN SCHEDULER
+
+# --- dolphin scheduler
+
+# Dolphin Scheduler 时区
+dolphin_scheduler__time_zone: "GMT+8"
+
+dolphin_scheduler__install_media: "{{ dir__ansible_server__files }}/dolphinscheduler/apache-dolphinscheduler-3.1.7-bin.tar.gz"
+
+# 解压目录
+dolphin_scheduler__dir_upload: "/upload/dolphin_scheduler"
+dolphin_scheduler__install_media_upload: "{{ dolphin_scheduler__dir_upload }}/apache-dolphinscheduler-3.1.7-bin"
+
+# 安装目录
+dolphin_scheduler__dir_data: "/data/dolphinscheduler"
+dolphin_scheduler__dir_home: "{{ dolphin_scheduler__dir_data }}"
+
+# Dolphin Scheduler 用户
+dolphin_scheduler__linux_user: dolphinscheduler
+dolphin_scheduler__linux_password: "dolphinscheduler"
+
+# Dolphin Scheduler 依赖的数据库 连接信息
+dolphin_scheduler__db_name: dolphinscheduler
+dolphin_scheduler__db_user: dolphinscheduler
+dolphin_scheduler__db_password: "Dolphin@123"
+dolphin_scheduler__db_port: 3306
+
+# Dolphin Scheduler 参数
+dolphin_scheduler__reserved_memory_gb: "2"
+
+# --- jar
+mysql_connector__jar_install_media: "{{ dir__ansible_server__files }}/jar/mysql-connector-java-8.0.16.jar"
+ojdbc__jar_install_media: "{{ dir__ansible_server__files }}/jar/ojdbc8-12.2.0.1.jar"
+
+# --- mysql client
+mysql_client__install_media: "{{ dir__ansible_server__files }}/dolphinscheduler/mysql-client-8.2.0-1.tar.gz"
+
+mysql_client__dir_upload: "/upload/mysql-client"
+mysql_client__install_media_upload: "{{ mysql_client__dir_upload }}"
+
+# --- datax
+datax__install_media: "{{ dir__ansible_server__files }}/datax/datax.zip"
+
+datax__dir_base: "/opt"
+datax__dir_home: "{{ datax__dir_base }}/datax"
+
+# --- psmisc
+psmisc__install_media: "{{ dir__ansible_server__files }}/dolphinscheduler/psmisc.tar.gz"
+
+psmisc__dir_upload: "/upload/psmisc"
+psmisc__install_media_upload: "{{ psmisc__dir_upload }}"
+
+# --- unzip
+unzip__install_media: "{{ dir__ansible_server__files }}/unzip/unzip.tar.gz"
+
+unzip__dir_upload: "{{ dolphin_scheduler__dir_upload }}"
+unzip__install_media_upload: "{{ unzip__dir_upload }}"

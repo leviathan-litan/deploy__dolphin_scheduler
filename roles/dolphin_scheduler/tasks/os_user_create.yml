@@ -1,0 +1,20 @@
+- name: "[dolphin scheduler] create linux user"
+  user:
+    name: "{{ dolphin_scheduler__linux_user }}"
+    uid: 4001
+    password: "{{ dolphin_scheduler__linux_password | password_hash('sha512', 'salt') }}"
+    shell: /bin/bash
+  ignore_errors: yes
+
+- name: "[dolphin scheduler] /etc/sudoers add record"
+  lineinfile:
+    backup: yes
+    path: /etc/sudoers
+    insertafter: EOF
+    line: "{{ dolphin_scheduler__linux_user }}  ALL=(ALL) NOPASSWD: ALL"
+
+- name: "[dolphin scheduler] /etc/sudoers config"
+  replace:
+    path: /etc/sudoers
+    regexp: 'Defaults\s+requirett'
+    replace: '#Defaults    requirett'

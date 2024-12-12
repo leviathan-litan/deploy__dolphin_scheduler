@@ -1,0 +1,84 @@
+- name: "操作系统用户创建"
+  include_tasks:
+    file: os_user_create.yml
+
+- name: "SSH等价"
+  include_tasks:
+    file: os_ssh_connectivity.yml
+
+- name: "[dolphin scheduler] 目录创建"
+  file:
+    state: directory
+    owner: "{{ dolphin_scheduler__linux_user }}"
+    group: "{{ dolphin_scheduler__linux_user }}"
+    mode: 0755
+    path: "{{ item }}"
+  with_items:
+    - "{{ dolphin_scheduler__dir_upload }}"
+    - "{{ dolphin_scheduler__dir_data }}"
+    - "{{ dolphin_scheduler__dir_home }}"
+    - "{{ mysql_client__dir_upload }}"
+    - "{{ mysql_client__install_media_upload }}"
+    - "{{ psmisc__dir_upload }}"
+    - "{{ psmisc__install_media_upload }}"
+
+- name: "海豚 安装介质解压"
+  include_tasks:
+    file: dolphin_scheduler_install_media_unarchive.yml
+  when: inventory_hostname == "master01"
+
+- name: "psmisc 安装"
+  include_tasks:
+    file: psmisc_install.yml
+
+- name: "mysql_client 安装"
+  include_tasks:
+    file: mysql_client_install.yml
+
+- name: "海豚 / 初始化 MySQL 数据库"
+  include_tasks:
+    file: dolphin_scheduler_init_mysql.yml
+  when: inventory_hostname == "master01"
+
+- name: "海豚 / 配置文件 / install_env.sh"
+  include_tasks:
+    file: dolphin_scheduler_configfile_install_env.yml
+  when: inventory_hostname == "master01"
+
+- name: "海豚 / 配置文件 / dolphinscheduler_env.sh"
+  include_tasks:
+    file: dolphin_scheduler_configfile_dolphinscheduler_env.yml
+  when: inventory_hostname == "master01"
+
+- name: "海豚 / 配置文件 / application.yaml"
+  include_tasks:
+    file: dolphin_scheduler_configfile_application.yml
+  when: inventory_hostname == "master01"
+
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 运行脚本 install.sh
+
+# Dolphin Scheduler / run install.sh
+# - name: "Dolphin Scheduler: install.sh"
+#   shell: |
+#     cd {{ dolphin_scheduler__install_media_upload }}/
+#     bash ./bin/install.sh &> ./bin/install.log
+#   become: yes
+#   become_user: "{{ dolphin_scheduler__linux_user }}”
+#   when: inventory_hostname == "master01"
+
+- name: "Dolphin Scheduler: install.sh / upload"
+  template:
+    owner: "{{ dolphin_scheduler__linux_user }}"
+    group: "{{ dolphin_scheduler__linux_user }}"
+    mode: 0755
+    src: "dolphin_scheduler_install.sh.j2"
+    dest: "{{ dolphin_scheduler__dir_upload }}/dolphin_scheduler_install.sh"
+  when: inventory_hostname == "master01"
+
+- name: "Dolphin Scheduler: install.sh / execute"
+  shell: |
+    {{ dolphin_scheduler__dir_upload }}/dolphin_scheduler_install.sh
+  become: yes
+  become_user: root
+  become_method: sudo
+  when: inventory_hostname == "master01"

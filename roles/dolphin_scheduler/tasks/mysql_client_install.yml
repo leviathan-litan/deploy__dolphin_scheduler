@@ -1,0 +1,24 @@
+- name: "[all] unzip: unarchive"
+  unarchive:
+    owner: root
+    group: root
+    mode: 0755
+    src: "{{ mysql_client__install_media }}"
+    dest: "{{ mysql_client__dir_upload }}"
+
+- name: "[mysql-client] find all rpm packages"
+  find:
+    paths: "{{ mysql_client__install_media_upload }}"
+    patterns: "*.rpm"
+  register: rpm_files
+
+- name: "[mysql-client] set fact rpm_list"
+  set_fact:
+    rpm_list: "{{ rpm_files.files | map(attribute='path') | list }}"
+
+- name: "[mysql-client] install"
+  shell: |
+    rpm -ivh {{ item }}
+  with_items:
+    - "{{ rpm_list }}"
+  ignore_errors: yes

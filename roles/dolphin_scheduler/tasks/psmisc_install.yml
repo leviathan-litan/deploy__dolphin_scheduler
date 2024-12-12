@@ -1,0 +1,24 @@
+- name: "[all] psmisc: unarchive"
+  unarchive:
+    owner: root
+    group: root
+    mode: 0755
+    src: "{{ psmisc__install_media }}"
+    dest: "{{ psmisc__dir_upload }}"
+
+- name: "[psmisc] find all rpm packages"
+  find:
+    paths: "{{ psmisc__install_media_upload }}"
+    patterns: "*.rpm"
+  register: rpm_files
+
+- name: "[psmisc] set fact rpm_list"
+  set_fact:
+    rpm_list: "{{ rpm_files.files | map(attribute='path') | list }}"
+
+- name: "[psmisc] install"
+  shell: |
+    rpm -ivh {{ item }}
+  with_items:
+    - "{{ rpm_list }}"
+  ignore_errors: yes
