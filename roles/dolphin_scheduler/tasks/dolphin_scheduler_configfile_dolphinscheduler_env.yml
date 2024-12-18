@@ -73,18 +73,18 @@
 
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 同步文件
 
-- name: "复制文件【dolphinscheduler_env.sh】到目录：master-server/conf"
-  shell: |
-    cp -rf {{ dolphin_scheduler__install_media_upload }}/bin/env/dolphinscheduler_env.sh {{ dolphin_scheduler__install_media_upload }}/master-server/conf/dolphinscheduler_env.sh
+# - name: "复制文件【dolphinscheduler_env.sh】到目录：master-server/conf"
+#   shell: |
+#     cp -rf {{ dolphin_scheduler__install_media_upload }}/bin/env/dolphinscheduler_env.sh {{ dolphin_scheduler__install_media_upload }}/master-server/conf/dolphinscheduler_env.sh
 
-- name: "复制文件【dolphinscheduler_env.sh】到目录：worker-server/conf"
-  shell: |
-    cp -rf {{ dolphin_scheduler__install_media_upload }}/bin/env/dolphinscheduler_env.sh {{ dolphin_scheduler__install_media_upload }}/worker-server/conf/dolphinscheduler_env.sh
+# - name: "复制文件【dolphinscheduler_env.sh】到目录：worker-server/conf"
+#   shell: |
+#     cp -rf {{ dolphin_scheduler__install_media_upload }}/bin/env/dolphinscheduler_env.sh {{ dolphin_scheduler__install_media_upload }}/worker-server/conf/dolphinscheduler_env.sh
 
-- name: "复制文件【dolphinscheduler_env.sh】到目录：alert-server/conf"
-  shell: |
-    cp -rf {{ dolphin_scheduler__install_media_upload }}/bin/env/dolphinscheduler_env.sh {{ dolphin_scheduler__install_media_upload }}/alert-server/conf/dolphinscheduler_env.sh
+# - name: "复制文件【dolphinscheduler_env.sh】到目录：alert-server/conf"
+#   shell: |
+#     cp -rf {{ dolphin_scheduler__install_media_upload }}/bin/env/dolphinscheduler_env.sh {{ dolphin_scheduler__install_media_upload }}/alert-server/conf/dolphinscheduler_env.sh
 
-- name: "复制文件【dolphinscheduler_env.sh】到目录：api-server/conf"
-  shell: |
-    cp -rf {{ dolphin_scheduler__install_media_upload }}/bin/env/dolphinscheduler_env.sh {{ dolphin_scheduler__install_media_upload }}/api-server/conf/dolphinscheduler_env.sh
+# - name: "复制文件【dolphinscheduler_env.sh】到目录：api-server/conf"
+#   shell: |
+#     cp -rf {{ dolphin_scheduler__install_media_upload }}/bin/env/dolphinscheduler_env.sh {{ dolphin_scheduler__install_media_upload }}/api-server/conf/dolphinscheduler_env.sh

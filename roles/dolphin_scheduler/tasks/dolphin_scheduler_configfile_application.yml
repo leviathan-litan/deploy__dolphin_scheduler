@@ -7,7 +7,7 @@
     regexp: '^\s\sreserved-memory'
     line: "  reserved-memory: {{ dolphin_scheduler__reserved_memory_gb }}"
 
-- name: "【worker-server】修改【内存参数】：/worker-server/conf/application.yamlh"
+- name: "【worker-server】修改【内存参数】：/worker-server/conf/application.yaml"
   lineinfile:
     backup: yes
     path: "{{ dolphin_scheduler__install_media_upload }}/worker-server/conf/application.yaml"
@@ -21,7 +21,7 @@
     regexp: '^\s\sreserved-memory'
     line: "  reserved-memory: {{ dolphin_scheduler__reserved_memory_gb }}"
 
-- name: "【api-server】修改【内存参数】：/api-server/conf/application.yamlh"
+- name: "【api-server】修改【内存参数】：/api-server/conf/application.yaml"
   lineinfile:
     backup: yes
     path: "{{ dolphin_scheduler__install_media_upload }}/api-server/conf/application.yaml"
@@ -38,7 +38,7 @@
     regexp: '^\s\s\s\stime-zone'
     line: "    time-zone: {{ dolphin_scheduler__time_zone }}"
 
-- name: "【worker-server】修改【时区】：/worker-server/conf/application.yamlh"
+- name: "【worker-server】修改【时区】：/worker-server/conf/application.yaml"
   lineinfile:
     backup: yes
     path: "{{ dolphin_scheduler__install_media_upload }}/worker-server/conf/application.yaml"
@@ -52,7 +52,7 @@
     regexp: '^\s\s\s\stime-zone'
     line: "    time-zone: {{ dolphin_scheduler__time_zone }}"
 
-- name: "【api-server】修改【时区】：/api-server/conf/application.yamlh"
+- name: "【api-server】修改【时区】：/api-server/conf/application.yaml"
   lineinfile:
     backup: yes
     path: "{{ dolphin_scheduler__install_media_upload }}/api-server/conf/application.yaml"
