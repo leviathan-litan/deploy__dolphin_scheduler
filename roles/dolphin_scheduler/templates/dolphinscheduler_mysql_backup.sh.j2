@@ -1,0 +1,34 @@
+#!/bin/bash
+
+# %%%%%%%%%%%%%%%%%%%%%%%%%% 变量
+
+mysql_host={{ dolphin_scheduler__db_host }}
+mysql_db={{ dolphin_scheduler__db_name }}
+mysql_user={{ dolphin_scheduler__db_user }}
+mysql_password={{ dolphin_scheduler__db_password }}
+
+datetime_current=`date +'%Y%m%d_%H%M%S'`
+
+dir_mysql_backup={{ mysql__dir_backup }}
+
+file_mysqldump_dolphinscheduler=mysql_db_{{ dolphin_scheduler__db_name }}.${datetime_current}.sql
+full_path_mysqldump_dolphinscheduler=${dir_mysql_backup}/${file_mysqldump_dolphinscheduler}
+
+# echo "当前时间：[${datetime_current}]"
+
+# %%%%%%%%%%%%%%%%%%%%%%%%%% 执行
+
+echo "检查[备份目录]"
+
+if [ -d "${dir_mysql_backup}" ]; then
+    echo "Directory [${dir_mysql_backup}] exists"
+else
+    echo "Directory [${dir_mysql_backup}] does not exist"
+    mkdir -p ${dir_mysql_backup}
+fi
+
+echo "执行[MySQL备份]: "+`date +'%Y-%m-%d %H:%M:%S'`
+
+mysqldump -h${mysql_host} -u${mysql_user} -p"${mysql_password}" --databases ${mysql_db} > ${full_path_mysqldump_dolphinscheduler}
+
+echo "结束[MySQL备份]: "+`date +'%Y-%m-%d %H:%M:%S'`

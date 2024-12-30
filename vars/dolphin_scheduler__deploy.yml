@@ -56,6 +56,7 @@ mysql__dir_upload: "/upload/mysql"
 mysql__install_media_uploaded: "{{ mysql__dir_upload }}/install_media"
 
 mysql__dir_data: "/data/mysql"
+mysql__dir_backup: "/data/mysql_backup"
 
 # %%%%%%%%%%%%%%%%%%%% ROLE: ZOOKEEPER
 
@@ -92,11 +93,15 @@ dolphin_scheduler__install_media_upload: "{{ dolphin_scheduler__dir_upload }}/ap
 dolphin_scheduler__dir_data: "/data/dolphinscheduler"
 dolphin_scheduler__dir_home: "{{ dolphin_scheduler__dir_data }}"
 
+# 自定义脚本目录
+dolphin_scheduler__dir_scripts_custom: "/data/dolphinscheduler_scripts"
+
 # Dolphin Scheduler 用户
 dolphin_scheduler__linux_user: dolphinscheduler
 dolphin_scheduler__linux_password: "dolphinscheduler"
 
 # Dolphin Scheduler 依赖的数据库 连接信息
+dolphin_scheduler__db_host: "192.168.5.104"
 dolphin_scheduler__db_name: dolphinscheduler
 dolphin_scheduler__db_user: dolphinscheduler
 dolphin_scheduler__db_password: "Dolphin@123"

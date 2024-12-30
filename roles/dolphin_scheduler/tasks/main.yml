@@ -17,6 +17,7 @@
     - "{{ dolphin_scheduler__dir_upload }}"
     - "{{ dolphin_scheduler__dir_data }}"
     - "{{ dolphin_scheduler__dir_home }}"
+    - "{{ dolphin_scheduler__dir_scripts_custom }}"
     - "{{ mysql_client__dir_upload }}"
     - "{{ mysql_client__install_media_upload }}"
     - "{{ psmisc__dir_upload }}"
@@ -53,6 +54,17 @@
 - name: "海豚 / 配置文件 / application.yaml"
   include_tasks:
     file: dolphin_scheduler_configfile_application.yml
+  when: inventory_hostname == "master01"
+
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Dolphin Scheduler 数据库备份脚本
+
+- name: "Dolphin Scheduler: install.sh / upload"
+  template:
+    owner: "{{ dolphin_scheduler__linux_user }}"
+    group: "{{ dolphin_scheduler__linux_user }}"
+    mode: 0755
+    src: "dolphinscheduler_mysql_backup.sh.j2"
+    dest: "{{ dolphin_scheduler__dir_scripts_custom }}/dolphinscheduler_mysql_backup.sh"
   when: inventory_hostname == "master01"
 
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 运行脚本 install.sh

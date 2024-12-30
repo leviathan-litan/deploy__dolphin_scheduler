@@ -77,7 +77,10 @@
     owner: mysql
     group: mysql
     mode: 0755
-    path: "{{ mysql__dir_data }}"
+    path: "{{ item }}"
+  with_items:
+    - "{{ mysql__dir_data }}"
+    - "{{ mysql__dir_backup }}"
 
 - name: "create my.cnf file"
   template:
