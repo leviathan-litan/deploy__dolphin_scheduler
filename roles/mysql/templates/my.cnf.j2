@@ -3,6 +3,10 @@
 [client]
 socket={{ mysql__dir_data }}/mysql.sock
 
+[mysql]
+
+# 默认字符集
+default-character-set=utf8
 
 [mysqld]
 #
@@ -27,15 +31,33 @@ socket={{ mysql__dir_data }}/mysql.sock
 # https://dev.mysql.com/doc/refman/8.2/en/server-system-variables.html#sysvar_default_authentication_plugin
 # default-authentication-plugin=mysql_native_password
 
+# 数据目录
 datadir={{ mysql__dir_data }}
 socket={{ mysql__dir_data }}/mysql.sock
 
+# 错误日志
 log-error=/var/log/mysqld.log
 pid-file=/var/run/mysqld/mysqld.pid
 
+# 默认时区
 default-time-zone = '{{ mysql__default_timezone }}'
 
 binlog_expire_logs_seconds = 604800
 
 # The minimum value is 4096 bytes. The maximum and default value is 1GB。
 max_binlog_size = 512M
+
+# 允许最大连接数
+max_connections=200
+
+# 表名大小写不敏感
+lower_case_table_names=1
+
+# 默认存储引擎
+default-storage-engine=INNODB
+
+# 默认端口
+port=3306
+
+# 默认字符集
+character-set-server=utf8
